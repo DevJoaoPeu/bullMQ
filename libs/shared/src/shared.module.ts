@@ -1,7 +1,7 @@
-import { BullModule } from '@nestjs/bull';
+import { BullModule } from '@nestjs/bullmq';
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import Joi from 'joi';
+import * as Joi from 'joi';
 
 @Module({
   imports: [
@@ -15,8 +15,9 @@ import Joi from 'joi';
       }),
     }),
     BullModule.forRootAsync({
+      inject: [ConfigService],
       useFactory: async (configService: ConfigService) => ({
-        redis: {
+        connection: {
           host: configService.getOrThrow('REDIS_HOST'),
           port: configService.getOrThrow('REDIS_PORT'),
           password: configService.getOrThrow('REDIS_PASSWORD'),

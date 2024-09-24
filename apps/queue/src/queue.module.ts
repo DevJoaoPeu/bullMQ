@@ -1,10 +1,15 @@
+import { BILLING_QUEUE, SharedModule } from '@app/shared';
+import { BullModule } from '@nestjs/bullmq';
 import { Module } from '@nestjs/common';
-import { QueueController } from './queue.controller';
-import { QueueService } from './queue.service';
+import { PaymentIntentProcessor } from './billing/payment-intent.processor';
 
 @Module({
-  imports: [],
-  controllers: [QueueController],
-  providers: [QueueService],
+  imports: [
+    SharedModule,
+    BullModule.registerQueue({
+      name: BILLING_QUEUE,
+    }),
+  ],
+  providers: [PaymentIntentProcessor],
 })
 export class QueueModule {}
